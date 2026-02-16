@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>State and City</title>
+</head>
+<body>
+
+<h2>Select State</h2>
+<select class="states">
+    <option value="">Select State</option>
+</select>
+
+<br><br>
+
+<h2>Select City</h2>
+<select class="city">
+    <option value="">Select City</option>
+</select>
+
+<script>
+
+
+fetch('http://localhost:8888/new/getstates.php')
+.then(response => response.json())
+.then(data => {
+
+    let sel = document.querySelector('.states');
+
+    for (let index = 0; index < data.length; index++) {
+         let id = data[index].id;
+        let name = data[index].name;
+
+        let opt = document.createElement('option');
+        opt.setAttribute('value', id);
+        opt.textContent = name;
+
+        sel.appendChild(opt);
+    }
+})
+.catch(error => console.log(error));
+
+
+document.querySelector('.states').addEventListener('change', function(event){
+
+    let id = event.target.value;
+
+    fetch(`http://localhost:8888/new/getcity.php?id= ${id}`)
+    .then(response => response.json())
+    .then(data => {
+
+        console.log(data)
+        let sel = document.querySelector('.city');
+        sel.innerHTML = "<option value=''>Select City</option>";
+
+       for (let index = 0; index < data.length; index++) {
+         let id = data[index].id;
+            let name = data[index].city;
+
+            let opt = document.createElement('option');
+            opt.setAttribute('value', id);
+            opt.textContent = name;
+
+            sel.appendChild(opt);
+        
+       }
+    })
+    .catch(error => console.log(error));
+});
+
+</script>
+</body>
+</html>
